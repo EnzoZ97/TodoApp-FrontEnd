@@ -1,5 +1,5 @@
-import { storage } from '../../firebase/firebaseConfig';
-import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { storage } from "../firebase/firebaseConfig";
+import { ref, uploadBytes, getDownloadURL  } from "firebase/storage";
 import { v4 as uuidv4 } from 'uuid';
 
 export const geturl_image = async ( file : File ) => {
@@ -8,5 +8,6 @@ export const geturl_image = async ( file : File ) => {
         //console.log('Uploaded a file!');
       }); 
     const url = await getDownloadURL(mountainsRef);
+    console.log(url);
     return url;
 }

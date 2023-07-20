@@ -250,7 +250,7 @@ const Todo_List = () => {
                 user.length === 0 
                 ?
                 <div className="w-full h-full flex flex-col justify-center items-center">
-                    <h1 className="text-4xl font-sans text-center break-all">Please, wait while the data is uploading</h1>
+                    <h1 className="text-4xl font-sans text-center break-all mb-2">Please, wait while the data is uploading</h1>
                     <SyncLoader
                     color="#36d7b7"
                     size={50}

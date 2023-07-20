@@ -1,7 +1,7 @@
 import react, { useState, useEffect} from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { geturl_image } from './service/url_image';
+import { geturl_image } from '../service/url_image';
 import { getPassword } from './service/password';
 
 import { HiOutlineMail } from "react-icons/hi";
@@ -48,13 +48,6 @@ const Register = () => {
     const[successMessage, setsuccessMessage] = useState(false);
     const[errorMessage, seterrorMessage] = useState(false);
 
-    useEffect(() => {
-        if(file){
-            geturl_image(file as File).then(result => {
-                seturl(result)
-            })
-        }
-    }, [file]);
 
     function checkName () : boolean{
         //throw any symbols, only characters
@@ -110,10 +103,15 @@ const Register = () => {
         return genderError;
     }
 
-    function checkFile (e : react.ChangeEvent<HTMLInputElement>) : void{  
+    async function getImage (file: File | null) {
+        const url : string = await geturl_image(file as File);
+        seturl(url);
+    };
+
+    async function checkFile (e : react.ChangeEvent<HTMLInputElement>) : Promise<void>{  
         const file = e.target.files?.[0];
         setFile(file || null);   
-            
+        await getImage(file as File);
     } 
 
     function handleSubmit ( event: React.FormEvent<HTMLFormElement> ) : void {
@@ -259,6 +257,7 @@ const Register = () => {
                     <input type="file" id="image" className="mt-2 p-1.5 rounded outline-blue-600 w-full"
                         onChange={(e) => checkFile(e)}
                         name="image" />
+                    <span className="text-sky-700 text-center">for the image to load correctly after having uploaded the image, wait 2 or 3 seconds before to do click in Sign up</span>
                 </div>
 
                 <div role="alerts" className="mx-auto w-full flex flex-col">

@@ -27,11 +27,12 @@ interface User  {
 
 const Login = ( ) => {
     const navigate = useNavigate();
-    const [email, setemail] = useState("");
-    const [emailError, setemailError] = useState(false);
-    const [password, setpassword] = useState("");
-    const [passwordError, setpasswordError] = useState(false);
-    const [activeButton, setactiveButton] = useState(false);
+    const [email, setemail] = useState<string>("");
+    const [emailError, setemailError] = useState<boolean>(false);
+    const [password, setpassword] = useState<string>("");
+    const [passwordError, setpasswordError] = useState<boolean>(false);
+    const [activeButton, setactiveButton] = useState<boolean>(false);
+    const [userError, setuserError] = useState<boolean>(false);
 
     const [users, setusers] = useState<Array<User>>([]);
 
@@ -87,34 +88,46 @@ const Login = ( ) => {
 
         for (let i = 0; i < users.length; i++){
             let password_crypto : string =  SHA256(password).toString();
-            if(users[i].email === email && users[i].password === password_crypto
-                && users[i].isLoggedIn === false){
-                    
-                Allow_Access(users[i]._id);
-                
-                let url : string = `${process.env.REACT_APP_BACKEND_API}/api/update/${users[i]._id}`;
-
-                fetch(url,{
-                    method: 'PATCH',
-                    headers: {'Content-type' : 'application/json'},
-                    body: JSON.stringify(data)
-                  })
-                  .then(response => response.json())
-                .then(result => {
-                console.log(result + " has been updated");
-                })
-                .catch(err => {
-                console.log("The data hasn't been update")
-                })
-
-
-                isValidate = true;
+            if(users[i].email === email && users[i].password === password_crypto){    
+                if(users[i].isLoggedIn === false){
+                    allow_access(users[i]._id);
+                    setuserError(false);
+                    isValidate = true;
+                }
+                else{
+                    check_access(users[i]._id);
+                    allow_access(users[i]._id);
+                    setuserError(false);
+                    isValidate = true;
+                }
+            }
+            else{
+                setuserError(true);
             }
         }
         return isValidate;
     }
 
-    function Allow_Access( _id : string ) : void{
+    function allow_access( _id : string ) : void{
+        const data : {isLoggedIn : boolean} = {
+            isLoggedIn : true
+        }
+        let url : string = `${process.env.REACT_APP_BACKEND_API}/api/update/${_id}`;
+        fetch(url,{
+            method: 'PATCH',
+            headers: {'Content-type' : 'application/json'},
+            body: JSON.stringify(data)
+          })
+          .then(response => response.json())
+        .then(result => {
+        console.log(result + " has been updated");
+        })
+        .catch(err => {
+        console.log("The data hasn't been update")
+        })
+    }
+
+    function check_access( _id : string ) : void{
         const data : {isLoggedIn : boolean} = {
             isLoggedIn : false
         }
@@ -136,8 +149,8 @@ const Login = ( ) => {
     function SingIn (e :React.MouseEvent<HTMLButtonElement, MouseEvent>) : void{
         //preventDefault for avoid "Form submission cancelled because the form is not connected"
         e.preventDefault();
-        if(activeButton && validateUser()){
-            
+        
+        if(activeButton && validateUser()){   
             navigate("/Todo_list");
         }
     }
@@ -182,6 +195,13 @@ const Login = ( ) => {
                 
                 </div>
                 <div className="flex flex-col mt-14" role="buttons">
+                    {
+                        userError
+                        ?
+                        <p className="text-center mb-2 text-red-500"><strong>Email</strong> and/or <strong>Password</strong> are wrong, please check to write them correctly</p>
+                        :
+                        ""
+                    }
                     <button type="submit" disabled={!activeButton} 
                         onClick={(e) => SingIn(e)}
                         className={activeButton ? "flex justify-center items-center w-full rounded-lg mx-auto text-lg p-2 mb-3 bg-blue-600 hover:bg-blue-700 font-sans font-medium text-white tracking-wider"
