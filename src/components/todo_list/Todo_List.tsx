@@ -7,14 +7,6 @@ import Navbar from './navbar/Navbar';
 import List from './list/List';
 import Notices from './notices/Notices';
 
-/*
-A cada input de cada elemento debo asociarlo con su id, es decir, formar un variable de estado
-de un array de objetos de id y valor, y luego cada vez que haga clic en edit, cada valor nuevo
-se ira agregando a su respectivo id, luego cuando quiera cambiar estos valores en la base de datos cuando 
-hago clic en updateTask, tengo que agregar el valor guardado de un id al respecto id del valor que quiero
-reemplazar
-*/
-
 const Todo_List = () => {
     interface User  {
         _id: string ,
@@ -58,7 +50,7 @@ const Todo_List = () => {
 
     function handleSubmit (event: React.FormEvent<HTMLFormElement>) : void {
         event.preventDefault();
-        const url : string = `todoapp-backend-production.up.railway.app/api/update/${user[0]._id}`;
+        const url : string = `${process.env.REACT_APP_BACKEND_API}/api/update/${user[0]._id}`;
         const new_task : task = {
             id : uuidv4(),
             task: task,
@@ -89,7 +81,7 @@ const Todo_List = () => {
         setmessageByAdd(true);
             setTimeout(() => {
                 setmessageByAdd(false);
-            },4000)
+            },3000)
     }
 
     function remove ( TaskId: string ) : void{
@@ -98,7 +90,7 @@ const Todo_List = () => {
             task: string ,
             Iscompleted : boolean
         }> = [];
-        const url : string = `todoapp-backend-production.up.railway.app/api/update/${user[0]._id}`;
+        const url : string = `${process.env.REACT_APP_BACKEND_API}/api/update/${user[0]._id}`;
 
         for(let i = 0 ; i < user[0].todo_list.length; i++ ){ 
             if(user[0].todo_list[i].id === TaskId){
@@ -124,7 +116,7 @@ const Todo_List = () => {
         setmessageByRemove(true);
         setTimeout(() => {
         setmessageByRemove(false);
-        },4000)
+        },3000)
     }
 
     function taskCompleted (taskId: string) : void{
@@ -134,7 +126,7 @@ const Todo_List = () => {
             Iscompleted : boolean
         }> = [];
 
-        const url : string = `todoapp-backend-production.up.railway.app/api/update/${user[0]._id}`;
+        const url : string = `${process.env.REACT_APP_BACKEND_API}/api/update/${user[0]._id}`;
 
         for(let i = 0 ; i < user[0].todo_list.length; i++ ){ 
             if(user[0].todo_list[i].id === taskId && user[0].todo_list[i].Iscompleted === false){
@@ -165,7 +157,7 @@ const Todo_List = () => {
             Iscompleted : boolean
         }> = user[0].todo_list;
 
-        const url : string = `todoapp-backend-production.up.railway.app/api/update/${user[0]._id}`;
+        const url : string = `${process.env.REACT_APP_BACKEND_API}/api/update/${user[0]._id}`;
 
 
         for(let i = 0 ; i < user[0].todo_list.length; i++ ){ 
@@ -196,7 +188,7 @@ const Todo_List = () => {
         setmessageByEditedTask(true);
         setTimeout(() => {
         setmessageByEditedTask(false);
-        },4000)    
+        },3000)    
     
     }
 

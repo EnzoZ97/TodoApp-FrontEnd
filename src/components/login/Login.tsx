@@ -89,10 +89,10 @@ const Login = ( ) => {
             let password_crypto : string =  SHA256(password).toString();
             if(users[i].email === email && users[i].password === password_crypto
                 && users[i].isLoggedIn === false){
-                    console.log("hola");
+                    
                 Allow_Access(users[i]._id);
                 
-                let url : string = `todoapp-backend-production.up.railway.app/api/update/${users[i]._id}`;
+                let url : string = `${process.env.REACT_APP_BACKEND_API}/api/update/${users[i]._id}`;
 
                 fetch(url,{
                     method: 'PATCH',
@@ -118,9 +118,7 @@ const Login = ( ) => {
         const data : {isLoggedIn : boolean} = {
             isLoggedIn : false
         }
-
-        console.log("hola");
-        let url : string = `todoapp-backend-production.up.railway.app/api/update/${_id}`;
+        let url : string = `${process.env.REACT_APP_BACKEND_API}/api/update/${_id}`;
         fetch(url,{
             method: 'PATCH',
             headers: {'Content-type' : 'application/json'},

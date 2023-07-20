@@ -41,7 +41,7 @@ const Profile = () => {
     },[])
 
     function Logout () : void{
-        const url : string = `todoapp-backend-production.up.railway.app/api/update/${id}`;
+        const url : string = `${process.env.REACT_APP_BACKEND_API}/api/update/${id}`;
         const data : {isLoggedIn : boolean} = {
             isLoggedIn : false
         }

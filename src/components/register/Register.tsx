@@ -135,8 +135,7 @@ const Register = () => {
         geturl_image(file as File).then(result => {
             seturl(result)
         })
-
-        const urlPost : string = "todoapp-backend-production.up.railway.app/api/create";
+        const urlPost : string = `${process.env.REACT_APP_BACKEND_API}/api/create`;
 
         const user : newUser = {
             name : name,
@@ -164,6 +163,7 @@ const Register = () => {
                 }, 4000);
               })
               .catch(err => {
+                console.error(err);
                 console.log("Couldn't send the data")
               })
         }

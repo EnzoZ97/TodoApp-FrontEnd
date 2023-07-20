@@ -26,7 +26,7 @@ const Navbar = ({user} : Props) => {
     const navigate = useNavigate();
 
     function Logout () : void{
-        const url : string = `todoapp-backend-production.up.railway.app/api/update/${user[0]._id}`;
+        const url : string = `${process.env.REACT_APP_BACKEND_API}/api/update/${user[0]._id}`;
         const data : {isLoggedIn : boolean} = {
             isLoggedIn : false
         }
