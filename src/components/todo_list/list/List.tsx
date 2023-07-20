@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { BsFillTrashFill } from "react-icons/bs";
 import { FiEdit } from "react-icons/fi";
 import { AiFillCheckCircle } from "react-icons/ai";
@@ -30,11 +31,10 @@ interface Props {
     updateTask (taskId : string) : void,
     isToEdit ( taskId : string ) : boolean,
     edit (taskId : string) : void,
-    Tasks_To_Edit : task[],
-    setTasks_To_Edit :  React.Dispatch<React.SetStateAction<task[]>>
+    Tasks_To_Edit : task[]
 }
 
-const List = ({user, remove, taskCompleted, updateTask, edit, isToEdit, Tasks_To_Edit, setTasks_To_Edit} : Props) => {
+const List = ({user, remove, taskCompleted, updateTask, edit, isToEdit, Tasks_To_Edit} : Props) => {
   
     function addNewTask (value : string, id : string) : void {
         let belongs : boolean = Tasks_To_Edit.some((elem) => elem.id === id);
@@ -66,7 +66,7 @@ const List = ({user, remove, taskCompleted, updateTask, edit, isToEdit, Tasks_To
                                 :
                                 <div role="icons-to-complete-or-edit-task">
                                     <AiFillCheckCircle className={elem.Iscompleted ? "text-gray-500 sm:text-2xl text-4xl" : "text-green-400 hover:text-green-500 cursor-pointer sm:text-2xl text-4xl"} 
-                                        onClick={() => taskCompleted(elem.id)} />
+                                        onClick={() => !elem.Iscompleted ? taskCompleted(elem.id) : ''} />
                                     <FiEdit className="mt-3 text-blue-400 hover:text-blue-500 cursor-pointer sm:text-2xl text-4xl"
                                         onClick={() => edit(elem.id)} />
                                 </div>
@@ -75,7 +75,7 @@ const List = ({user, remove, taskCompleted, updateTask, edit, isToEdit, Tasks_To
 
                         <div role="middle" className="w-full sm:w-3/5">
                             {
-                                isToEdit(elem.id) 
+                                isToEdit(elem.id)
                                 ? 
                                 <input type="text" placeholder="write your new task" className="w-full text-center rounded outline-cyan-500 p-2"
                                     onChange={(e) => addNewTask(e.target.value, elem.id)} />

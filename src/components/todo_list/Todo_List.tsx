@@ -120,19 +120,20 @@ const Todo_List = () => {
     }
 
     function taskCompleted (taskId: string) : void{
+        let userClone : Array<User> = user;
         let new_todo_list : Array<{
             id: string ,
             task: string ,
             Iscompleted : boolean
         }> = [];
-
         const url : string = `${process.env.REACT_APP_BACKEND_API}/api/update/${user[0]._id}`;
 
-        for(let i = 0 ; i < user[0].todo_list.length; i++ ){ 
-            if(user[0].todo_list[i].id === taskId && user[0].todo_list[i].Iscompleted === false){
-                let Task : task = user[0].todo_list[i];
+        for(let i = 0 ; i < userClone[0].todo_list.length; i++ ){ 
+            if(user[0].todo_list[i].id === taskId && userClone[0].todo_list[i].Iscompleted === false){
+                let Task : task = userClone[0].todo_list[i];
                 Task["Iscompleted"] = true;
-                new_todo_list = user[0].todo_list.splice(i,1, Task);
+                userClone[0].todo_list.splice(i,1, Task);
+                new_todo_list = userClone[0].todo_list;
             }
         }
 
@@ -146,7 +147,16 @@ const Todo_List = () => {
             body: JSON.stringify(todo_list)
         })
         .then(response => response.json())
-        .then(result => console.log("The task has been completed and updated"))
+        .then(result => {
+            console.log("The task has been completed and updated")
+            getUsers().then((result) => {
+                for(let i = 0; i < result.length ; i++){
+                    if(result[i].isLoggedIn){
+                        setuser([result[i]]);
+                    }
+                }
+            })
+        })
         .catch(err => console.error(err)); 
     }
 
@@ -181,7 +191,8 @@ const Todo_List = () => {
         })
         .then(response => response.json())
         .then(result => {
-            console.log("The task has been updated")
+            console.log("The task has been updated");
+            window.location.reload();
         })
         .catch(err => console.error(err)); 
 
@@ -250,7 +261,7 @@ const Todo_List = () => {
                     <Navbar user={user} />
                         <div className="w-9/12 mt-5 p-4 bg-white rounded shadow-lg shadow-gray-500/50">
                             <div role="presentation" className="w-full flex flex-col justify-center items-center">
-                                <h1 className="text-2xl font-sans text-center font-bold break-all">Welcome {user[0].name}</h1>
+                                <h1 className="text-2xl font-sans text-center font-bold break-all mb-3">Welcome {user[0].name}</h1>
                                 <img src={user[0].file === "" ? "https://upload.wikimedia.org/wikipedia/commons/9/99/Sample_User_Icon.png" :
                                     user[0].file} alt="profile_image" className="h-40 w-48  sm:h-48 sm:w-40 rounded mx-auto" /> 
                             </div>
@@ -261,7 +272,7 @@ const Todo_List = () => {
                             </form>
                             <Notices messageByAdd={messageByAdd} messageByRemove={messageByRemove} messageByEditedTask={messageByEditedTask} />
                             <List user={user} remove={remove} taskCompleted={taskCompleted} updateTask={updateTask} isToEdit={isToEdit} edit={edit}
-                                Tasks_To_Edit = {Tasks_To_Edit} setTasks_To_Edit={setTasks_To_Edit}  />
+                                Tasks_To_Edit = {Tasks_To_Edit}  />
                         </div>
                 </div>
             }
